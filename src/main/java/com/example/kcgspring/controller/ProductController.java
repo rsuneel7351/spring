@@ -1,7 +1,10 @@
 package com.example.kcgspring.controller;
 
 import com.example.kcgspring.Service.ProductService;
+import com.example.kcgspring.dto.ProductCreateRequest;
+import com.example.kcgspring.dto.ProductPatchRequest;
 import com.example.kcgspring.product.Product;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +25,9 @@ public class ProductController {
     }
 
     @PostMapping
-    public Product createProduct(@RequestBody Product product){
-        return productService.createProduct(product);
+    public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductCreateRequest request){
+        Product createProduct=productService.createProduct(request);
+        return ResponseEntity.ok(createProduct);
     }
 
     @GetMapping("/{id}")
@@ -36,7 +40,7 @@ public class ProductController {
         productService.deleteProductById(id);
     }
     @PatchMapping("/{id}")
-    public ResponseEntity<Product> updateProductById(@PathVariable Long id ,@RequestBody Product productDetails){
-        return productService.updateProductById(id,productDetails).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Product> updateProductById(@PathVariable Long id ,@RequestBody ProductPatchRequest request){
+        return productService.updateProductById(id,request).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 }
